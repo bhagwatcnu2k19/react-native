@@ -5,9 +5,10 @@ import { Icon } from 'native-base';
 import DefaultProps from '../constants/navigation';
 import AppConfig from '../../constants/config';
 
-import RecipesContainer from '../../containers/Recipes';
-import RecipeListingComponent from '../components/Recipe/Listing';
-import RecipeSingleComponent from '../components/Recipe/Single';
+import ExpenseContainer from '../../containers/AllExpenses'
+import SingleExpenseContainer from '../../containers/SingleExpense'
+import AddExpenseContainer from '../../containers/AddExpense'
+import BalanceContainer from '../../containers/AllBalances'
 
 import SignUpContainer from '../../containers/SignUp';
 import SignUpComponent from '../components/User/SignUp';
@@ -24,7 +25,9 @@ import UpdateProfileComponent from '../components/User/UpdateProfile';
 import MemberContainer from '../../containers/Member';
 import ProfileComponent from '../components/User/Profile';
 
-import AboutComponent from '../components/About';
+
+console.disableYellowBox = true;
+
 
 const Index = (
   <Stack hideNavBar>
@@ -37,21 +40,21 @@ const Index = (
         {...DefaultProps.tabProps}
       >
         <Stack
-          key="home"
+          key="expenses"
           title={AppConfig.appName.toUpperCase()}
           icon={() => <Icon name="planet" {...DefaultProps.icons} />}
           {...DefaultProps.navbarProps}
         >
-          <Scene key="home" component={AboutComponent} />
+          <Scene key="expenses" component={ExpenseContainer} />
         </Stack>
 
         <Stack
-          key="recipes"
-          title="RECIPES"
-          icon={() => <Icon name="book" {...DefaultProps.icons} />}
+          key="balances"
+          title={AppConfig.appName.toUpperCase()}
+          icon={() => <Icon name="planet" {...DefaultProps.icons} />}
           {...DefaultProps.navbarProps}
         >
-          <Scene key="recipes" component={RecipesContainer} Layout={RecipeListingComponent} />
+          <Scene key="balances" component={BalanceContainer} />
         </Stack>
 
         <Stack
@@ -100,12 +103,21 @@ const Index = (
     <Scene
       back
       clone
-      key="recipe"
-      title="RECIPE"
+      key="expense"
+      title="Single Expense"
       {...DefaultProps.navbarProps}
-      component={RecipesContainer}
-      Layout={RecipeSingleComponent}
+      component={SingleExpenseContainer}
     />
+
+    <Scene
+      back
+      clone
+      key="addExpense"
+      title="Add Expense"
+      {...DefaultProps.navbarProps}
+      component={AddExpenseContainer}
+    />
+
   </Stack>
 );
 
