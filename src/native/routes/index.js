@@ -29,6 +29,26 @@ import ProfileComponent from '../components/User/Profile';
 console.disableYellowBox = true;
 
 
+import {AsyncStorage} from 'react-native';
+
+
+_storeData = async (a,b) => {
+  try {
+    await AsyncStorage.setItem(a, b);
+  } catch (error) {
+    // Error saving data
+  }
+};
+
+
+_storeData('connection', '192.168.137.217:1880/')
+
+AsyncStorage.getItem('connection').then(res =>{
+  if(res != null){
+    console.log(res)
+  }
+})
+
 const Index = (
   <Stack hideNavBar>
     <Scene hideNavBar>

@@ -11,6 +11,8 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Header from '../native/components/UI/Header';
 import Spacer from '../native/components/UI/Spacer';
+import {AsyncStorage} from 'react-native';
+
 // import console = require('console');
 
 class BalanceListing extends Component {
@@ -21,6 +23,13 @@ class BalanceListing extends Component {
 
     onPress = item => {
         this.setState({ loading: true });    
+
+
+        AsyncStorage.getItem('logged_email').then(res =>{
+          if(res != null){
+            console.log(res)
+          }
+        })
 
         const headers = {
             'Content-Type': 'application/json',

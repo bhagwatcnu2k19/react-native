@@ -8,6 +8,9 @@ import Messages from '../UI/Messages';
 import Header from '../UI/Header';
 import Spacer from '../UI/Spacer';
 
+import {AsyncStorage} from 'react-native';
+
+
 class Login extends React.Component {
   static propTypes = {
     member: PropTypes.shape({
@@ -36,10 +39,22 @@ class Login extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  _storeData = async (a,b) => {
+    try {
+      await AsyncStorage.setItem(a, b);
+    } catch (error) {
+      // Error saving data
+    }
+  };
+
+
+
+
   handleChange = (name, val) => this.setState({ [name]: val })
 
   handleSubmit = () => {
     const { onFormSubmit } = this.props;
+    this._storeData('logged_email',this.state.email)
 
     return onFormSubmit(this.state)
       .then(() => setTimeout(() => Actions.pop(), 1000))

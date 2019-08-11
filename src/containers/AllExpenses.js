@@ -11,6 +11,9 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Header from '../native/components/UI/Header';
 import Spacer from '../native/components/UI/Spacer';
+
+import {AsyncStorage} from 'react-native';
+
 // import console = require('console');
 
 class ExpenseListing extends Component {
@@ -26,6 +29,13 @@ class ExpenseListing extends Component {
 
     fetchData = () => {
     this.setState({ loading: true });    
+
+    AsyncStorage.getItem('logged_email').then(res =>{
+      if(res != null){
+        console.log(res)
+      }
+    })
+
     axios.get(`http://192.168.1.154:1880/api/v2/expenses`,{headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}} )
     .then(res => {
         const expenses = res.data.data.expenses;
