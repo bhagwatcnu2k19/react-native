@@ -50,6 +50,13 @@ class BalanceListing extends Component {
                 this.setState({ balances });
             });
 
+            this.setState({ loading: true });    
+            axios.get(`http://192.168.1.154:1880/api/v2/profile`,{headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}} )
+            .then(res => {
+                const balances = res.data.data.outstanding_amount;
+                this.setState({outstanding_amount:balances});
+            });
+
         }
 
     componentDidMount = () => this.fetchData();

@@ -5,10 +5,13 @@ import {
   View
 } from 'react-native';
 import { Actions } from 'react-native-router-flux'; // New code
-import { Container, Content, Card, CardItem, Body, H3, Picker, Button, Label, Icon } from 'native-base';
+import { Container, Form, Item, Input, Content, Card, CardItem, Body, H3, Picker, Button, Label, Icon } from 'native-base';
 import Spacer from '../native/components/UI/Spacer';
 import { TextInput, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import axios from 'axios';
+import {
+  FlatList, RefreshControl, Image,
+} from 'react-native';
 
 export default class AddExpense extends React.Component {
   state = {
@@ -18,23 +21,31 @@ export default class AddExpense extends React.Component {
     categories : {
       id: 1
     },
+    new_id : 0,
+    new_owe :0,
+    new_lend:0,
     user_count : 0,
-    user_list : [],
-    users : [
-      {
-        "id":140,
-        "owe":100,
-        "lend":0
-      },
-      {
-        "id":141,
-        "owe":0,
-        "lend":100
-      }
+    added_users : [
     ],
     loading : false
 
   }
+
+  handleChange = (name, val) => {
+    console.log(name, val)
+    this.setState({ [name]: val })
+  }
+
+  addNewUser = () => {
+    this.state.added_users.push({"id":this.state.new_id, "owe":this.state.new_owe, "lend":this.state.new_lend})
+    console.log(this.state.added_users)
+    this.state.new_id=0
+    this.state.new_owe=0
+    this.state.new_lend=0
+    this.componentDidMount()
+    this.render()
+  }
+
   submitExpense = () => {
     this.setState({loading:true})
     axios.post(`http://192.168.1.154:1880/api/v2/expenses/`,
@@ -42,7 +53,7 @@ export default class AddExpense extends React.Component {
       description: this.state.description,
       total_amount: this.state.amount,
       categories: this.state.categories,
-      users: this.state.users
+      users: this.state.added_users
     },
     {headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}}
     )
@@ -72,6 +83,11 @@ export default class AddExpense extends React.Component {
       //   user_list = res.data.data.users;
       //   this.setState({user_list: user_list});
       // })
+      this.didFocusListener = this.props.navigation.addListener(
+        'didFocus', () => {
+          this.setState({'getData' : true, loading: true})
+        },
+      );
   }
   render () {
     return (
@@ -134,19 +150,98 @@ export default class AddExpense extends React.Component {
           </CardItem>
         
 
-          
-          
+          <Form>
+            <Item stackedLabel>
+              <Label>User ID</Label>
+              <Input
+              value={this.new_id}
+                onChangeText={v => this.handleChange('new_id', v)}
+              />
+            </Item>
+            <Item stackedLabel>
+              <Label>Owe</Label>
+              <Input
+              value={this.new_owe}
+                onChangeText={v => this.handleChange('new_owe', v)}
+              />
+            </Item>
+            <Item stackedLabel>
+              <Label>Lend</Label>
+              <Input
+              value={this.new_lend}
+                onChangeText={v => this.handleChange('new_lend', v)}
+              />
+            </Item>
+            </Form>
+
+
+
          <CardItem >
            <Body>
                   <Spacer size={15} />
                   <Button
                     block
                    style={{backgroundColor: 'lightgray', flex:1}}
-                   disabled={this.state.loading}
+                    onPress={() => {this.addNewUser()}}
+                  >
+                    {/* <ActivityIndicator animating={this.state.loading} /> */}
+                    <Text>{"Add User"}</Text>
+                  </Button>
+                  <Spacer size={5} />
+                  </Body>
+           </CardItem> 
+
+          <FlatList
+            numColumns={1}
+            data={this.state.added_users}
+            renderItem={({ item }) => (
+              <Card transparent style={{ paddingHorizontal: 6 }}>
+                {/* <CardItem cardBody>
+                  <TouchableOpacity onPress={() => this.onPress(item)} style={{ flex: 1 }}>
+                  <Text>
+                        Delete User
+                      </Text>
+                  </TouchableOpacity>
+                </CardItem> */}
+
+                <CardItem cardBody>
+                  <Body>
+                    <Spacer size={10} />
+                    <Text style={{ fontWeight: '800' }}>
+                      ID :- {item.id},
+                      Email : {item.owe},
+                      Amount : {item.lend}
+                    </Text>
+                    <Spacer size={15} />
+                    {/* <Button
+                      block
+                      bordered
+                      small
+                      onPress={() => this.onPress(item)}
+                    >
+  
+                    </Button> */}
+                    <Spacer size={5} />
+                  </Body>
+                </CardItem>
+              </Card>
+            )}
+            refreshControl={(
+              <RefreshControl
+              />
+            )}
+          />      
+
+         <CardItem >
+           <Body>
+                  <Spacer size={15} />
+                  <Button
+                    block
+                   style={{backgroundColor: 'lightgray', flex:1}}
                     onPress={() => {this.submitExpense()}}
                   >
                     {/* <ActivityIndicator animating={this.state.loading} /> */}
-                    <Text>{this.state.loading?"SAVED":"SAVE"}</Text>
+                    <Text>{"Add Expense"}</Text>
                   </Button>
                   <Spacer size={5} />
                   </Body>
