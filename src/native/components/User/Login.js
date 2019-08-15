@@ -35,8 +35,8 @@ class Login extends React.Component {
       password: '',
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   _storeData = async (a,b) => {
@@ -47,14 +47,31 @@ class Login extends React.Component {
     }
   };
 
-
-
-
   handleChange = (name, val) => this.setState({ [name]: val })
 
   handleSubmit = () => {
     const { onFormSubmit } = this.props;
     this._storeData('logged_email',this.state.email)
+
+    axios.post(`http://192.168.1.154:1880/api/v2/login/`,
+    data = {
+      email: this.state.email,
+      password: this.state.password
+    },
+    // {headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}}
+    )
+      .then(res => {
+        Alert.alert("Expense Created Successfully");
+        this.setState({loading:false});
+        Actions.expenses()
+      }).catch(function (error) {
+        Alert.alert(response.data.message)
+        this.setState({loading:false});
+        console.log(error)
+        this.setState({loading:false});
+      })
+      .finally(function () {
+      });
 
     return onFormSubmit(this.state)
       .then(() => setTimeout(() => Actions.pop(), 1000))
@@ -73,7 +90,7 @@ class Login extends React.Component {
               title="Welcome back"
               content="Please use your email and password to login."
             />
-            {error && <Messages message={error} />}
+            {/* {error && <Messages message={error} />} */}
             {success && <Messages type="success" message={success} />}
           </View>
 

@@ -12,7 +12,7 @@ import { Actions } from 'react-native-router-flux';
 import Header from '../native/components/UI/Header';
 import Spacer from '../native/components/UI/Spacer';
 
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, Alert} from 'react-native';
 
 // import console = require('console');
 
@@ -20,23 +20,38 @@ class ExpenseListing extends Component {
     state = {
         error: null,
         loading: false,
+        token:""
     }
 
     onPress = item => Actions.expense({ expenses: item });
 
-    componentDidMount = () => this.fetchData();
-    
+    componentDidMount = () => 
+    {
+      AsyncStorage.getItem('token').then(res =>{
+        this.state.token = res
+      })
+      AsyncStorage.getItem('logged_state').then(res =>{
+        if(res == 'out'){
+          Alert.alert("Log in first to access expenses")
+          this.setState({expenses:[]})
+          console.log(res)
+        }
+        else if(res == 'in'){
+          this.fetchData();
+          console.log(res)
+        }
+      })
+    }
+
+    // componentDidUpdate = () =>
+    // {
+    //   this.fetchData();
+    // }
+
+
 
     fetchData = () => {
-    this.setState({ loading: true });    
-
-    AsyncStorage.getItem('logged_email').then(res =>{
-      if(res != null){
-        console.log(res)
-      }
-    })
-
-    axios.get(`http://192.168.1.154:1880/api/v2/expenses`,{headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}} )
+    axios.get(`http://192.168.1.154:1880/api/v2/expenses`,{headers: {token: this.state.token}} )
     .then(res => {
         const expenses = res.data.data.expenses;
         this.setState({ expenses });

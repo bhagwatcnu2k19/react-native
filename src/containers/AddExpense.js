@@ -12,19 +12,23 @@ import axios from 'axios';
 import {
   FlatList, RefreshControl, Image,
 } from 'react-native';
+import {AsyncStorage} from 'react-native';
+
 
 export default class AddExpense extends React.Component {
   state = {
-    description: "adi",
-    amount: 100,
+    token : "",
+    description: "New Expense",
+    amount: 0,
     category_list : [],
     categories : {
       id: 1
     },
     new_id : 0,
-    new_owe :0,
-    new_lend:0,
-    user_count : 0,
+    new_owe : 0,
+    new_lend: 0,
+    user_list : [],
+    user_count : null,
     added_users : [
     ],
     loading : false
@@ -39,9 +43,9 @@ export default class AddExpense extends React.Component {
   addNewUser = () => {
     this.state.added_users.push({"id":this.state.new_id, "owe":this.state.new_owe, "lend":this.state.new_lend})
     console.log(this.state.added_users)
-    this.state.new_id=0
-    this.state.new_owe=0
-    this.state.new_lend=0
+    // this.state.new_id=0
+    // this.state.new_owe=0
+    // this.state.new_lend=0
     this.componentDidMount()
     this.render()
   }
@@ -55,17 +59,20 @@ export default class AddExpense extends React.Component {
       categories: this.state.categories,
       users: this.state.added_users
     },
-    {headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}}
+    {headers: {token: this.state.token}}
     )
       .then(res => {
         Alert.alert("Expense Created Successfully");
         this.setState({loading:false});
         Actions.expenses()
       }).catch(function (error) {
-        Alert.alert(response.data.error)
-        this.setState({loading:false});
-        console.log(error)
-        this.setState({loading:false});
+        Alert.alert("Expense addition failed : Input invalid")
+        this.state.added_users = []
+        Actions.addExpense()
+        // Alert.alert(response.data.error)
+        // this.setState({loading:false});
+        // console.log(error)
+        // this.setState({loading:false});
       })
       .finally(function () {
       });
@@ -73,16 +80,23 @@ export default class AddExpense extends React.Component {
 
   componentDidMount() {
     Actions.refresh();
-    axios.get(`http://192.168.1.154:1880/api/v2/categories/`, {headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}})
+
+    AsyncStorage.getItem('token').then(res =>{
+      this.state.token = res
+    })
+    console.log(this.state.token)
+    axios.get(`http://192.168.1.154:1880/api/v2/categories/`, {headers: {token: this.state.token}})
       .then(res => {
         category_list = res.data.data.categories;
         this.setState({category_list});
       })
-      // axios.get(`http://192.168.1.154:1880/api/v2/users/`, {headers: {token: 'd8bf9594-3ed6-41f7-a76c-f6c37aa7db41'}})
-      // .then(res => {
-      //   user_list = res.data.data.users;
-      //   this.setState({user_list: user_list});
-      // })
+
+      axios.get(`http://192.168.1.154:1880/api/v2/users/`, {headers: {token: this.state.token}})
+      .then(res => {
+        user_list = res.data.data.users;
+        this.setState({user_list: user_list});
+      })
+
       this.didFocusListener = this.props.navigation.addListener(
         'didFocus', () => {
           this.setState({'getData' : true, loading: true})
@@ -142,7 +156,6 @@ export default class AddExpense extends React.Component {
               >
               {this.state.category_list.map((category) => {
                  return (
-
                  <Picker.Item label={category.name} value={category.id} key={category.id} />
                  )
               })}
@@ -151,25 +164,46 @@ export default class AddExpense extends React.Component {
         
 
           <Form>
-            <Item stackedLabel>
+            {/* <Item stackedLabel>
               <Label>User ID</Label>
               <Input
               value={this.new_id}
                 onChangeText={v => this.handleChange('new_id', v)}
               />
-            </Item>
+            </Item> */}
+            <CardItem  style={{padding:1,flex:1}}>
+            <Picker
+              selectedValue={this.state.new_id}
+              mode='dropdown'
+              style={{flex:1}}
+              onValueChange={(item) => {
+                console.log(item)
+                this.setState({new_id:item})
+              }}
+              >
+              {this.state.user_list.map((user) => {
+                console.log(this.state.user_list)
+                 return (
+                 <Picker.Item label={user.email} value={user.id} key={user.id}/>
+                 )
+              })}
+              </Picker>
+          </CardItem>
+
             <Item stackedLabel>
               <Label>Owe</Label>
               <Input
+              keyboardType='numeric'
               value={this.new_owe}
-                onChangeText={v => this.handleChange('new_owe', v)}
+                onChangeText={v => this.handleChange('new_owe', parseInt(v))}
               />
             </Item>
             <Item stackedLabel>
               <Label>Lend</Label>
               <Input
+              keyboardType='numeric'
               value={this.new_lend}
-                onChangeText={v => this.handleChange('new_lend', v)}
+                onChangeText={v => this.handleChange('new_lend', parseInt(v))}
               />
             </Item>
             </Form>
@@ -208,9 +242,9 @@ export default class AddExpense extends React.Component {
                   <Body>
                     <Spacer size={10} />
                     <Text style={{ fontWeight: '800' }}>
-                      ID :- {item.id},
-                      Email : {item.owe},
-                      Amount : {item.lend}
+                      User's email :- {item.id},
+                      Owe : {item.owe},
+                      Lend : {item.lend}
                     </Text>
                     <Spacer size={15} />
                     {/* <Button

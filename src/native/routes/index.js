@@ -13,8 +13,11 @@ import BalanceContainer from '../../containers/AllBalances'
 import SignUpContainer from '../../containers/SignUp';
 import SignUpComponent from '../components/User/SignUp';
 
-import LoginContainer from '../../containers/Login';
+// import LoginContainer from '../../containers/Login';
+import LoginContainer from '../../containers/Newlogin';
 import LoginComponent from '../components/User/Login';
+import LogoutContainer from '../../containers/Logout';
+
 
 import ForgotPasswordContainer from '../../containers/ForgotPassword';
 import ForgotPasswordComponent from '../components/User/ForgotPassword';
@@ -100,7 +103,17 @@ const Index = (
             component={LoginContainer}
             Layout={LoginComponent}
           />
+
           <Scene
+            back
+            key="logout"
+            title="LOGOUT"
+            {...DefaultProps.navbarProps}
+            component={LogoutContainer}
+            // Layout={LoginComponent}
+          />
+
+          {/* <Scene
             back
             key="forgotPassword"
             title="FORGOT PASSWORD"
@@ -115,7 +128,7 @@ const Index = (
             {...DefaultProps.navbarProps}
             component={UpdateProfileContainer}
             Layout={UpdateProfileComponent}
-          />
+          /> */}
         </Stack>
       </Tabs>
     </Scene>

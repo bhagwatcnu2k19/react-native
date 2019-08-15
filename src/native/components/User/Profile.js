@@ -7,31 +7,71 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Header from '../UI/Header';
 
-const Profile = ({ member, logout }) => (
+
+import {AsyncStorage, Alert} from 'react-native';
+
+
+
+// const Profile = ({ member, logout }) => (
+  
+
+  export default class Profile extends React.Component {
+
+    state = {
+      email:'',
+      login_state: 'out'
+    }
+
+    componentDidMount () {
+
+      console.log(this.state.login_state)
+      AsyncStorage.getItem('login_state').then(res =>{
+        if(res !== 'out'){
+          console.log(res)
+          this.setState({login_state:'in'})
+          console.log("User is logged in")
+        }
+
+      })
+    
+      AsyncStorage.getItem('token').then(res =>{
+        if(res != null){
+          console.log(res)
+        }
+      })
+    }
+
+    componentDidUpdate (){
+      Alert.alert("View has been updated")
+
+    }
+
+    logout = () => {
+      this.state.email= ''
+      this.state.login_state = 'out'
+      AsyncStorage.setItem('login_state', 'out')
+      Alert.alert('You have been logged out!')
+      Actions.profile()
+      this.componentDidMount()
+      this.render()
+    }
+  
+render = () => (
   <Container>
     <Content>
       <List>
-        {(member && member.email)
+        {(this.state.login_state == 'in')
           ? (
             <View>
               <Content padder>
                 <Header
-                  title={`Hi ${member.firstName},`}
-                  content={`You are currently logged in as ${member.email}`}
+                  title={`Hi!`}
+                  content={`You are currently logged in!`}
                 />
               </Content>
 
-              <ListItem onPress={Actions.updateProfile} icon>
-                <Left>
-                  <Icon name="person-add" />
-                </Left>
-                <Body>
-                  <Text>
-                    Update My Profile
-                  </Text>
-                </Body>
-              </ListItem>
-              <ListItem onPress={logout} icon>
+             
+              <ListItem onPress={this.logout} icon>
                 <Left>
                   <Icon name="power" />
                 </Left>
@@ -48,7 +88,7 @@ const Profile = ({ member, logout }) => (
               <Content padder>
                 <Header
                   title="Hi there,"
-                  content="Please login to gain extra access"
+                  content="Please login to gain access"
                 />
               </Content>
 
@@ -72,16 +112,6 @@ const Profile = ({ member, logout }) => (
                   </Text>
                 </Body>
               </ListItem>
-              <ListItem onPress={Actions.forgotPassword} icon>
-                <Left>
-                  <Icon name="help-buoy" />
-                </Left>
-                <Body>
-                  <Text>
-                    Forgot Password
-                  </Text>
-                </Body>
-              </ListItem>
             </View>
           )
         }
@@ -89,14 +119,13 @@ const Profile = ({ member, logout }) => (
     </Content>
   </Container>
 );
+}
+// Profile.propTypes = {
+//   member: PropTypes.shape({}),
+//   logout: PropTypes.func.isRequired,
+// };
 
-Profile.propTypes = {
-  member: PropTypes.shape({}),
-  logout: PropTypes.func.isRequired,
-};
+// Profile.defaultProps = {
+//   member: {},
+// };
 
-Profile.defaultProps = {
-  member: {},
-};
-
-export default Profile;
