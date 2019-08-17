@@ -30,24 +30,15 @@ class ExpenseListing extends Component {
       AsyncStorage.getItem('token').then(res =>{
         this.state.token = res
       })
-      AsyncStorage.getItem('logged_state').then(res =>{
-        if(res == 'out'){
-          Alert.alert("Log in first to access expenses")
-          this.setState({expenses:[]})
-          console.log(res)
-        }
-        else if(res == 'in'){
-          this.fetchData();
-          console.log(res)
-        }
-      })
+      // AsyncStorage.getItem('logged_state').then(res =>{
+      //   if(res == 'out'){
+      //     Alert.alert("Log in first to access expenses")
+      //     this.setState({expenses:[]})
+      //     console.log(res)
+      //   }
+        // else if(res == 'in'){
+      this.fetchData();
     }
-
-    // componentDidUpdate = () =>
-    // {
-    //   this.fetchData();
-    // }
-
 
 
     fetchData = () => {

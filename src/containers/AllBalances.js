@@ -83,22 +83,10 @@ class BalanceListing extends Component {
 
   }
 
-  // componentDidUpdate = () =>
-  // {
-  //   // this.componentDidMount()
-  //   // axios.get(`http://192.168.1.154:1880/api/v2/balances`,{headers: {token: this.state.token}} )
-  //   // .then(res => {
-  //   //     const balances = res.data.data.balances;
-  //   //     this.setState({ balances });
-  //   //     console.log(JSON.stringify(res));
-  //   // });
-
-  //   // axios.get(`http://192.168.1.154:1880/api/v2/profile`,{headers: {token: this.state.token}} )
-  //   // .then(res => {
-  //   //     const balances = res.data.data.outstanding_amount;
-  //   //     this.setState({outstanding_amount:balances});
-  //   // });
-  // }
+  componentDidUpdate = () =>
+  {
+    
+  }
 
   render = () => {
     return (

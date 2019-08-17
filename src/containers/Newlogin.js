@@ -35,9 +35,9 @@ export default class Newlogin extends React.Component {
             AsyncStorage.setItem('logged_email', this.state.email)
             AsyncStorage.setItem('login_state', 'in')
             AsyncStorage.setItem('token', response.data.data.token)
-            Actions.pop()
-            Actions.profile()
-            // Actions.logout()
+            // Actions.pop()
+            // Actions.profile()
+            Actions.logout()
             
           } catch (error) {
             console.log("entered here shouldn't have");

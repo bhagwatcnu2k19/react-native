@@ -9,10 +9,6 @@ import Header from '../UI/Header';
 
 
 import {AsyncStorage, Alert} from 'react-native';
-
-
-
-// const Profile = ({ member, logout }) => (
   
 
   export default class Profile extends React.Component {
@@ -24,25 +20,25 @@ import {AsyncStorage, Alert} from 'react-native';
 
     componentDidMount () {
 
-      console.log(this.state.login_state)
-      AsyncStorage.getItem('login_state').then(res =>{
-        if(res !== 'out'){
-          console.log(res)
-          this.setState({login_state:'in'})
-          console.log("User is logged in")
-        }
+      // console.log(this.state.login_state)
+      // AsyncStorage.getItem('login_state').then(res =>{
+      //   if(res !== 'out'){
+      //     console.log(res)
+      //     this.setState({login_state:'in'})
+      //     console.log("User is logged in")
+      //   }
 
-      })
+      // })
     
-      AsyncStorage.getItem('token').then(res =>{
-        if(res != null){
-          console.log(res)
-        }
-      })
+      // AsyncStorage.getItem('token').then(res =>{
+      //   if(res != null){
+      //     console.log(res)
+      //   }
+      // })
     }
 
     componentDidUpdate (){
-      Alert.alert("View has been updated")
+      // Alert.alert("View has been updated")
 
     }
 
@@ -51,39 +47,15 @@ import {AsyncStorage, Alert} from 'react-native';
       this.state.login_state = 'out'
       AsyncStorage.setItem('login_state', 'out')
       Alert.alert('You have been logged out!')
+      this.state.login_state = 'out'
       Actions.profile()
-      this.componentDidMount()
-      this.render()
+      this.state.login_state = 'out'
     }
   
 render = () => (
   <Container>
     <Content>
       <List>
-        {(this.state.login_state == 'in')
-          ? (
-            <View>
-              <Content padder>
-                <Header
-                  title={`Hi!`}
-                  content={`You are currently logged in!`}
-                />
-              </Content>
-
-             
-              <ListItem onPress={this.logout} icon>
-                <Left>
-                  <Icon name="power" />
-                </Left>
-                <Body>
-                  <Text>
-                    Logout
-                  </Text>
-                </Body>
-              </ListItem>
-            </View>
-          )
-          : (
             <View>
               <Content padder>
                 <Header
@@ -113,8 +85,6 @@ render = () => (
                 </Body>
               </ListItem>
             </View>
-          )
-        }
       </List>
     </Content>
   </Container>

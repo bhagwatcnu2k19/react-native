@@ -18,6 +18,7 @@ import LoginContainer from '../../containers/Newlogin';
 import LoginComponent from '../components/User/Login';
 import LogoutContainer from '../../containers/Logout';
 
+import LexContainer from '../../containers/LexChatbot';
 
 import ForgotPasswordContainer from '../../containers/ForgotPassword';
 import ForgotPasswordComponent from '../components/User/ForgotPassword';
@@ -69,6 +70,15 @@ const Index = (
           {...DefaultProps.navbarProps}
         >
           <Scene key="expenses" component={ExpenseContainer} />
+        </Stack>
+
+        <Stack
+          key="LexChatbot"
+          title={AppConfig.appName.toUpperCase()}
+          icon={() => <Icon name="planet" {...DefaultProps.icons} />}
+          {...DefaultProps.navbarProps}
+        >
+          <Scene key="LexChatbot" component={LexContainer} />
         </Stack>
 
         <Stack

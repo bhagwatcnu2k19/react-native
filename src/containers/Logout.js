@@ -1,21 +1,15 @@
 import React from 'react';
 import {
-  StyleSheet,
+  ListItem,
   Text,
-  View
+  View, 
+  Left
 } from 'react-native';
-import { Actions } from 'react-native-router-flux'; // New code
-import { Container, Header, Content, Card, CardItem, Body, H3, Picker, Button, Label, Icon } from 'native-base';
-import Spacer from '../native/components/UI/Spacer';
-import { TextInput, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
-import axios from 'axios';
-import {
-  FlatList, RefreshControl, Image,
-} from 'react-native';
+import { Container, Header, Content, Body, Icon } from 'native-base';
+import { Component } from 'react';
+import {AsyncStorage, Alert} from 'react-native';
 
-import {AsyncStorage} from 'react-native';
-
-export default class Logout extends React.Component {
+class Logout extends Component {
   state = {
     email:"",
     password:"",
@@ -30,11 +24,6 @@ export default class Logout extends React.Component {
     Alert.alert('You have been logged out!')
   }
 
-
-
-  componentDidMount() {
-      console.log("entered here! pls do somethingggg!!!")
-  }
   render () {
     return (
     <Container>
@@ -48,19 +37,21 @@ export default class Logout extends React.Component {
               </Content>
 
              
-              <ListItem onPress={this.logout()} icon>
+              {/* <ListItem onPress={this.logout()} icon>
                 <Left>
-                  <Icon name="power" />
+                  <Icon name="power" />```````````````````````````````````````
                 </Left>
                 <Body>
                   <Text>
                     Logout
                   </Text>
                 </Body>
-              </ListItem>
+              </ListItem> */}
       </View>
       </Content>
     </Container>
     )
   }
 }
+
+export default Logout;
